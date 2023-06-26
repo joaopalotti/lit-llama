@@ -63,6 +63,7 @@ def main(
     data_dir: str = "data/alpaca", 
     pretrained_path: str = "checkpoints/lit-llama/7B/lit-llama.pth",
     out_dir: str = "out/adapter/alpaca",
+    model_size: str = "7B"
 ):
 
     fabric = L.Fabric(
@@ -79,7 +80,8 @@ def main(
 
     train_data, val_data = load_datasets(data_dir=data_dir)
 
-    config = LLaMAConfig(block_size=max_seq_length)
+    config = LLaMAConfig.from_name(model_size)
+    config.block_size = max_seq_length
 
     if not os.path.isfile(pretrained_path):
         raise FileNotFoundError(

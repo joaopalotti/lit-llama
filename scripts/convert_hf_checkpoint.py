@@ -50,11 +50,15 @@ def convert_hf_checkpoint(
     sd_meta = model.state_dict()
     sd = {}
 
-    # Load the json file containing weight mapping
-    pytorch_bin_map_json_path = checkpoint_dir / "pytorch_model.bin.index.json"
-    with open(pytorch_bin_map_json_path) as json_map:
-        bin_index = json.load(json_map)
-    bin_files = set(checkpoint_dir / bin for bin in bin_index["weight_map"].values())
+    if model_size == "3B":
+        bin_files = set([checkpoint_dir / "pytorch_model.bin"])
+    else:
+        # Load the json file containing weight mapping
+        pytorch_bin_map_json_path = checkpoint_dir / "pytorch_model.bin.index.json"
+        with open(pytorch_bin_map_json_path) as json_map:
+            bin_index = json.load(json_map)
+        bin_files = set(checkpoint_dir / bin for bin in bin_index["weight_map"].values())
+
     if not bin_files:
         raise ValueError(f"Expected {str(checkpoint_dir)!r} to contain .bin files")
 

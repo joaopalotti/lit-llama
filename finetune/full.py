@@ -52,6 +52,7 @@ def main(
     data_dir: str = "data/alpaca",
     pretrained_path: str = "checkpoints/lit-llama/7B/lit-llama.pth",
     out_dir: str = "out/full/alpaca",
+    model_size: str = "7B"
 ):
 
     auto_wrap_policy = partial(transformer_auto_wrap_policy, transformer_layer_cls={Block})
@@ -66,7 +67,7 @@ def main(
 
     train_data, val_data = load_datasets(data_dir=data_dir)
 
-    config = LLaMAConfig.from_name("7B")
+    config = LLaMAConfig.from_name(model_size)
     config.block_size = block_size
 
     checkpoint = torch.load(pretrained_path)

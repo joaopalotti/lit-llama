@@ -28,6 +28,7 @@ class LLaMAConfig:
     n_layer: int = 32
     n_head: int = 32
     n_embd: int = 4096
+    n_hidden: int = 11008
 
     def __post_init__(self):
         if self.padded_vocab_size is None:
@@ -39,10 +40,11 @@ class LLaMAConfig:
 
 
 llama_configs = {
-    "7B": dict(n_layer=32, n_head=32, n_embd=4096),
-    "13B": dict(n_layer=40, n_head=40, n_embd=5120),
-    "30B": dict(n_layer=60, n_head=52, n_embd=6656),
-    "65B": dict(n_layer=80, n_head=64, n_embd=8192),
+    "3B": dict(n_layer=26, n_head=32, n_embd=3200, n_hidden=8640),
+    "7B": dict(n_layer=32, n_head=32, n_embd=4096, n_hidden=11008),
+    "13B": dict(n_layer=40, n_head=40, n_embd=5120, n_hidden=13824),
+    "30B": dict(n_layer=60, n_head=52, n_embd=6656, n_hidden=17920),
+    "65B": dict(n_layer=80, n_head=64, n_embd=8192, n_hidden=22016),
 }
 
 
@@ -238,9 +240,7 @@ class CausalSelfAttention(nn.Module):
 class MLP(nn.Module):
     def __init__(self, config: LLaMAConfig) -> None:
         super().__init__()
-        hidden_dim = 4 * config.n_embd
-        n_hidden = int(2 * hidden_dim / 3)
-        n_hidden = find_multiple(n_hidden, 256)
+        n_hidden = config.n_hidden
 
         self.c_fc1 = nn.Linear(config.n_embd, n_hidden, bias=False)
         self.c_fc2 = nn.Linear(config.n_embd, n_hidden, bias=False)

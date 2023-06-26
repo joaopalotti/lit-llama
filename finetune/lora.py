@@ -50,6 +50,7 @@ def main(
     pretrained_path: str = "checkpoints/lit-llama/7B/lit-llama.pth",
     tokenizer_path: str = "checkpoints/lit-llama/tokenizer.model",
     out_dir: str = "out/lora/alpaca",
+    model_size: str = "7B"
 ):
 
     fabric = L.Fabric(accelerator="cuda", devices=1, precision="bf16-true")
@@ -61,7 +62,7 @@ def main(
 
     train_data, val_data = load_datasets(data_dir=data_dir)
 
-    config = LLaMAConfig.from_name("7B")
+    config = LLaMAConfig.from_name(model_size)
     config.block_size = max_seq_length
 
     checkpoint = torch.load(pretrained_path)

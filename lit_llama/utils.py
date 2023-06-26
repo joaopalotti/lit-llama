@@ -16,6 +16,7 @@ from torch.distributed.fsdp import StateDictType
 from torch.serialization import normalize_storage_type
 
 llama_model_sizes = {
+    3200: "3B",  # 3B n_embd=3200
     4096: "7B",  # 7B n_embd=4096
     5120: "13B",  # 13B n_embd=5120
     6656: "30B",  # 30B n_embd=6656
